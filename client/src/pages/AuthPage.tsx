@@ -13,7 +13,7 @@ const AuthPage = () => {
           to="admin/login"
           as={Link}
           radius="sm"
-          className="shadow-xl w-[300px] h-[50px] text-white font-bold text-md bg-gradient-to-tr from-indigo-500 via-blue-500 to-sky-300 "
+          className="shadow-xl w-[300px] h-[50px] text-white font-bold text-md bg-gradient-to-tr from-indigo-500 via-blue-500 to-sky-300 hover:-translate-y-1 duration-500 transition-all "
         >
           Login as Admin
         </Button>
@@ -21,7 +21,7 @@ const AuthPage = () => {
           to="user/login"
           as={Link}
           radius="sm"
-          className="shadow-xl w-[300px] h-[50px] text-white font-bold text-md bg-gradient-to-tr from-indigo-500 via-blue-500 to-sky-300 "
+          className="shadow-xl w-[300px] h-[50px] text-white font-bold text-md bg-gradient-to-tr from-indigo-500 via-blue-500 to-sky-300 hover:-translate-y-1 duration-500 transition-all "
         >
           Login as User
         </Button>

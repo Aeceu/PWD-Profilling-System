@@ -14,7 +14,7 @@ import { genders } from "../../data/genders";
 import { religions } from "../../data/religion";
 import { civils } from "../../data/civil";
 import { employments } from "../../data/employments";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { bloods } from "../../data/bloods";
 import {
   disabilityTypeNotVisible,
@@ -24,6 +24,10 @@ import { assistiveDevices } from "../../data/assistiveDevices";
 import { medications } from "../../data/medications";
 import { relationships } from "../../data/relationships";
 import { Link } from "react-router-dom";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { TUserSignup } from "../../types/user";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { userSchema } from "../../lib/userSchema";
 
 const UserSignupForm = () => {
   const [employmentType, setEmploymentType] = useState("");
@@ -32,8 +36,66 @@ const UserSignupForm = () => {
   const [specificMedicine, setSpecificMedicine] = useState(false);
   const [showPass, setShowPass] = useState(false);
 
+  const {
+    watch,
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<TUserSignup>({ resolver: zodResolver(userSchema) });
+
+  useEffect(() => {
+    if (watch().employment === "Employed") {
+      setEmploymentType("Employed");
+    } else if (watch().employment === "Unemployed") {
+      setEmploymentType("Unemployed");
+    } else if (watch().employment === "Student") {
+      setEmploymentType("Student");
+    } else {
+      setEmploymentType("");
+    }
+  }, [watch().employment]);
+
+  useEffect(() => {
+    if (watch().disability === "Visible") {
+      setDisabilityType("Visible");
+    } else if (watch().disability === "Not Visible") {
+      setDisabilityType("Not Visible");
+    } else {
+      setDisabilityType("");
+    }
+  }, [watch().disability]);
+
+  useEffect(() => {
+    if (watch().device === "Specify device used") {
+      setSpecificDevice(true);
+    } else {
+      setSpecificDevice(false);
+    }
+  }, [watch().device]);
+
+  useEffect(() => {
+    if (watch().medicine === "Specify Medicine Used") {
+      setSpecificMedicine(true);
+    } else {
+      setSpecificMedicine(false);
+    }
+  }, [watch().medicine]);
+
+  const onSubmit: SubmitHandler<TUserSignup> = (data) => {
+    try {
+      console.log(data);
+      alert("Submitted");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  console.log(errors);
+
   return (
-    <form className="relative grid grid-cols-4 place-items-center gap-4 p-4  bg-white">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="relative grid grid-cols-4 place-items-center gap-4 p-4  bg-white"
+    >
       <Link
         to="/auth/user/login"
         className="bg-red-500 text-white px-2 py-1 rounded-b-md  text-sm absolute top-0 left-5 flex items-center hover:scale-105 duration-200 transition-all cursor-pointer shadow-xl"
@@ -48,6 +110,10 @@ const UserSignupForm = () => {
         Profile Information
       </h1>
       <Input
+        variant="faded"
+        isInvalid={!!errors.lastName}
+        errorMessage={errors.lastName?.message}
+        {...register("lastName")}
         radius="sm"
         size="sm"
         label="Last name"
@@ -55,6 +121,10 @@ const UserSignupForm = () => {
         startContent={<UserIcon className="w-4" />}
       />
       <Input
+        variant="faded"
+        isInvalid={!!errors.firstName}
+        errorMessage={errors.firstName?.message}
+        {...register("firstName")}
         radius="sm"
         size="sm"
         label="First name"
@@ -62,13 +132,19 @@ const UserSignupForm = () => {
         startContent={<UserIcon className="w-4" />}
       />
       <Input
+        variant="faded"
+        isInvalid={!!errors.middleName}
+        errorMessage={errors.middleName?.message}
+        {...register("middleName")}
         radius="sm"
         size="sm"
-        label="Last name"
+        label="Middle name"
         className="text-xs"
         startContent={<UserIcon className="w-4" />}
       />
       <Input
+        variant="faded"
+        {...register("suffix")}
         radius="sm"
         size="sm"
         label="Suffix"
@@ -76,6 +152,10 @@ const UserSignupForm = () => {
         startContent={<UserIcon className="w-4" />}
       />
       <Input
+        variant="faded"
+        isInvalid={!!errors.age}
+        errorMessage={errors.age?.message}
+        {...register("age")}
         radius="sm"
         size="sm"
         type="number"
@@ -84,6 +164,10 @@ const UserSignupForm = () => {
         placeholder=" "
       />
       <Input
+        variant="faded"
+        isInvalid={!!errors.birthdate}
+        errorMessage={errors.birthdate?.message}
+        {...register("birthdate")}
         radius="sm"
         size="sm"
         type="date"
@@ -92,6 +176,10 @@ const UserSignupForm = () => {
         placeholder=" "
       />
       <Input
+        variant="faded"
+        isInvalid={!!errors.birthplace}
+        errorMessage={errors.birthplace?.message}
+        {...register("birthplace")}
         radius="sm"
         size="sm"
         label="Place of birth"
@@ -99,10 +187,14 @@ const UserSignupForm = () => {
         placeholder=" "
       />
       <Select
+        variant="faded"
+        isInvalid={!!errors.gender}
+        errorMessage={errors.gender?.message}
+        {...register("gender")}
         radius="sm"
         size="sm"
         label="Gender"
-        placeholder="Select an gender"
+        placeholder=" "
         className="text-xs"
       >
         {genders.map((gender) => (
@@ -112,10 +204,14 @@ const UserSignupForm = () => {
         ))}
       </Select>
       <Select
+        variant="faded"
+        isInvalid={!!errors.religion}
+        errorMessage={errors.religion?.message}
+        {...register("religion")}
         radius="sm"
         size="sm"
         label="Religion"
-        placeholder="Select an religion"
+        placeholder=" "
         className="text-xs"
       >
         {religions.map((religion) => (
@@ -125,6 +221,10 @@ const UserSignupForm = () => {
         ))}
       </Select>
       <Input
+        variant="faded"
+        isInvalid={!!errors.citizenship}
+        errorMessage={errors.citizenship?.message}
+        {...register("citizenship")}
         radius="sm"
         size="sm"
         label="Citizenship"
@@ -132,10 +232,14 @@ const UserSignupForm = () => {
         placeholder=" "
       />
       <Select
+        variant="faded"
+        isInvalid={!!errors.civil}
+        errorMessage={errors.civil?.message}
+        {...register("civil")}
         radius="sm"
         size="sm"
         label="Civil Status"
-        placeholder="Select your civil status"
+        placeholder=" "
         className="text-xs"
       >
         {civils.map((civil) => (
@@ -150,6 +254,10 @@ const UserSignupForm = () => {
         Contact Information
       </h1>
       <Input
+        variant="faded"
+        isInvalid={!!errors.email}
+        errorMessage={errors.email?.message}
+        {...register("email")}
         radius="sm"
         size="sm"
         label="Email"
@@ -157,6 +265,10 @@ const UserSignupForm = () => {
         startContent={<EnvelopeIcon className="w-4" />}
       />
       <Input
+        variant="faded"
+        isInvalid={!!errors.phone}
+        errorMessage={errors.phone?.message}
+        {...register("phone")}
         type="number"
         radius="sm"
         size="sm"
@@ -165,6 +277,8 @@ const UserSignupForm = () => {
         startContent={<PhoneIcon className="w-4" />}
       />
       <Input
+        variant="faded"
+        {...register("landline")}
         radius="sm"
         size="sm"
         label="Landline no."
@@ -183,27 +297,8 @@ const UserSignupForm = () => {
         Home/Permanent Address
       </h1>
       <Input
-        radius="sm"
-        size="sm"
-        label="Province"
-        className="text-xs"
-        placeholder=" "
-      />
-      <Input
-        radius="sm"
-        size="sm"
-        label="City/Municipality"
-        className="text-xs"
-        placeholder=" "
-      />
-      <Input
-        radius="sm"
-        size="sm"
-        label="District"
-        className="text-xs"
-        placeholder=" "
-      />
-      <Input
+        variant="faded"
+        {...register("houseno")}
         radius="sm"
         size="sm"
         label="House no.,block,lot,building,etc"
@@ -211,6 +306,10 @@ const UserSignupForm = () => {
         placeholder=" "
       />
       <Input
+        variant="faded"
+        isInvalid={!!errors.street}
+        errorMessage={errors.street?.message}
+        {...register("street")}
         radius="sm"
         size="sm"
         label="Street address, village etc."
@@ -218,6 +317,10 @@ const UserSignupForm = () => {
         placeholder=" "
       />
       <Input
+        variant="faded"
+        isInvalid={!!errors.baranggay}
+        errorMessage={errors.baranggay?.message}
+        {...register("baranggay")}
         radius="sm"
         size="sm"
         label="Baranggay"
@@ -225,10 +328,41 @@ const UserSignupForm = () => {
         placeholder=" "
       />
       <Input
+        variant="faded"
+        {...register("district")}
+        radius="sm"
+        size="sm"
+        label="District"
+        className="text-xs"
+        placeholder=" "
+      />
+      <Input
+        variant="faded"
+        isInvalid={!!errors.city}
+        errorMessage={errors.city?.message}
+        {...register("city")}
+        radius="sm"
+        size="sm"
+        label="City/Municipality"
+        className="text-xs"
+        placeholder=" "
+      />
+      <Input
+        variant="faded"
+        {...register("province")}
+        radius="sm"
+        size="sm"
+        label="Province"
+        className="text-xs"
+        placeholder=" "
+      />
+      <Input
+        variant="faded"
+        {...register("zipcode")}
         type="number"
         radius="sm"
         size="sm"
-        label="zipconde"
+        label="zip code"
         className="text-xs"
         placeholder=" "
       />
@@ -244,6 +378,10 @@ const UserSignupForm = () => {
         information being requested.
       </p>
       <Input
+        variant="faded"
+        isInvalid={!!errors.elementary}
+        errorMessage={errors.elementary?.message}
+        {...register("elementary")}
         radius="sm"
         size="sm"
         label="Name of Elementary School"
@@ -251,20 +389,28 @@ const UserSignupForm = () => {
         placeholder=" "
       />
       <Select
+        variant="faded"
+        isInvalid={!!errors.attain}
+        errorMessage={errors.attain?.message}
+        {...register("attain")}
         radius="sm"
         size="sm"
         label="School Attainment"
         placeholder="Select your school attainment"
         className="text-xs"
       >
-        <SelectItem key={1} value="Graduate">
+        <SelectItem key={"Graduate"} value="Graduate">
           Graduate
         </SelectItem>
-        <SelectItem key={2} value="Undergraduate">
+        <SelectItem key={"Undergraduate"} value="Undergraduate">
           Undergraduate
         </SelectItem>
       </Select>
       <Input
+        variant="faded"
+        isInvalid={!!errors.highschool}
+        errorMessage={errors.highschool?.message}
+        {...register("highschool")}
         radius="sm"
         size="sm"
         label="Name of Junior High School"
@@ -272,20 +418,28 @@ const UserSignupForm = () => {
         placeholder=" "
       />
       <Select
+        variant="faded"
+        isInvalid={!!errors.attain1}
+        errorMessage={errors.attain1?.message}
+        {...register("attain1")}
         radius="sm"
         size="sm"
         label="School Attainment"
         placeholder="Select your school attainment"
         className="text-xs"
       >
-        <SelectItem key={1} value="Graduate">
+        <SelectItem key={"Graduate"} value="Graduate">
           Graduate
         </SelectItem>
-        <SelectItem key={2} value="Undergraduate">
+        <SelectItem key={"Undergraduate"} value="Undergraduate">
           Undergraduate
         </SelectItem>
       </Select>
       <Input
+        variant="faded"
+        isInvalid={!!errors.senior}
+        errorMessage={errors.senior?.message}
+        {...register("senior")}
         radius="sm"
         size="sm"
         label="Name of Senior High School"
@@ -293,20 +447,28 @@ const UserSignupForm = () => {
         placeholder=" "
       />
       <Select
+        variant="faded"
+        isInvalid={!!errors.attain2}
+        errorMessage={errors.attain2?.message}
+        {...register("attain2")}
         radius="sm"
         size="sm"
         label="School Attainment"
         placeholder="Select your school attainment"
         className="text-xs"
       >
-        <SelectItem key={1} value="Graduate">
+        <SelectItem key={"Graduate"} value="Graduate">
           Graduate
         </SelectItem>
-        <SelectItem key={2} value="Undergraduate">
+        <SelectItem key={"Undergraduate"} value="Undergraduate">
           Undergraduate
         </SelectItem>
       </Select>
       <Input
+        variant="faded"
+        isInvalid={!!errors.college}
+        errorMessage={errors.college?.message}
+        {...register("college")}
         radius="sm"
         size="sm"
         label="Name of College University"
@@ -314,16 +476,20 @@ const UserSignupForm = () => {
         placeholder=" "
       />
       <Select
+        variant="faded"
+        isInvalid={!!errors.attain3}
+        errorMessage={errors.attain3?.message}
+        {...register("attain3")}
         radius="sm"
         size="sm"
         label="School Attainment"
         placeholder="Select your school attainment"
         className="text-xs"
       >
-        <SelectItem key={1} value="Graduate">
+        <SelectItem key={"Graduate"} value="Graduate">
           Graduate
         </SelectItem>
-        <SelectItem key={2} value="Undergraduate">
+        <SelectItem key={"Undergraduate"} value="Undergraduate">
           Undergraduate
         </SelectItem>
       </Select>
@@ -333,7 +499,10 @@ const UserSignupForm = () => {
       <h1 className="col-span-4 font-bold text-xl w-full">Occupation</h1>
       <div className="w-full col-span-4 grid grid-cols-4">
         <Select
-          onChange={(e) => setEmploymentType(e.target.value)}
+          variant="faded"
+          isInvalid={!!errors.employment}
+          errorMessage={errors.employment?.message}
+          {...register("employment")}
           radius="sm"
           size="sm"
           label="Employment Type"
@@ -347,70 +516,81 @@ const UserSignupForm = () => {
           ))}
         </Select>
       </div>
-      {employmentType === "Employed" && (
-        <>
-          <Input
-            radius="sm"
-            size="sm"
-            label="Occupation"
-            className="text-xs "
-            placeholder=" "
-          />
-          <Input
-            radius="sm"
-            size="sm"
-            label="Months/Years of being employed"
-            className="text-xs "
-            placeholder=" "
-          />
-          <Input
-            radius="sm"
-            size="sm"
-            label="1. Skills while being employed"
-            className="text-xs "
-            placeholder=" "
-          />
-          <Input
-            radius="sm"
-            size="sm"
-            label="2. Skills while being employed"
-            className="text-xs "
-            placeholder=" "
-          />
-        </>
-      )}
-      {employmentType === "Unemployed" && (
-        <>
-          <Input
-            radius="sm"
-            size="sm"
-            label="Occupation"
-            className="text-xs "
-            placeholder=" "
-          />
-          <Input
-            radius="sm"
-            size="sm"
-            label="Months/Years of being unemployed"
-            className="text-xs "
-            placeholder=" "
-          />
-          <Input
-            radius="sm"
-            size="sm"
-            label="1. Skills while being unemployed"
-            className="text-xs "
-            placeholder=" "
-          />
-          <Input
-            radius="sm"
-            size="sm"
-            label="2. Skills while being unemployed"
-            className="text-xs "
-            placeholder=" "
-          />
-        </>
-      )}
+      <>
+        <Input
+          isDisabled={employmentType !== "Employed" ? true : false}
+          variant="faded"
+          {...register("occupation")}
+          radius="sm"
+          size="sm"
+          label="Occupation"
+          className="text-xs row-span-2"
+          placeholder=" "
+        />
+        <Input
+          isDisabled={employmentType === "Employed" ? false : true}
+          variant="faded"
+          {...register("yearEmploy")}
+          radius="sm"
+          size="sm"
+          label="Months/Years of being employed"
+          className="text-xs "
+          placeholder=" "
+        />
+        <Input
+          isDisabled={employmentType === "Employed" ? false : true}
+          variant="faded"
+          {...register("skill1")}
+          radius="sm"
+          size="sm"
+          label="1. Skills while being employed"
+          className="text-xs "
+          placeholder=" "
+        />
+        <Input
+          isDisabled={employmentType === "Employed" ? false : true}
+          variant="faded"
+          {...register("skill2")}
+          radius="sm"
+          size="sm"
+          label="2. Skills while being employed"
+          className="text-xs "
+          placeholder=" "
+        />
+      </>
+
+      <>
+        <Input
+          isDisabled={employmentType === "Unmployed" ? false : true}
+          variant="faded"
+          {...register("yearUnemploy")}
+          radius="sm"
+          size="sm"
+          label="Months/Years of being unemployed"
+          className="text-xs "
+          placeholder=" "
+        />
+        <Input
+          isDisabled={employmentType === "Unmployed" ? false : true}
+          variant="faded"
+          {...register("skill1_1")}
+          radius="sm"
+          size="sm"
+          label="1. Skills while being unemployed"
+          className="text-xs "
+          placeholder=" "
+        />
+        <Input
+          isDisabled={employmentType === "Unmployed" ? false : true}
+          variant="faded"
+          {...register("skill2_1")}
+          radius="sm"
+          size="sm"
+          label="2. Skills while being unemployed"
+          className="text-xs "
+          placeholder=" "
+        />
+      </>
 
       <div className="col-span-4 mt-4 w-full h-[1px] border-b border-black" />
 
@@ -418,10 +598,14 @@ const UserSignupForm = () => {
         Health Information
       </h1>
       <Select
+        variant="faded"
+        isInvalid={!!errors.blood}
+        errorMessage={errors.blood?.message}
+        {...register("blood")}
         radius="sm"
         size="sm"
         label="Blood Type"
-        placeholder="Select your blood type"
+        placeholder=" "
         className="text-xs"
       >
         {bloods.map((blood) => (
@@ -431,6 +615,10 @@ const UserSignupForm = () => {
         ))}
       </Select>
       <Input
+        variant="faded"
+        isInvalid={!!errors.height}
+        errorMessage={errors.height?.message}
+        {...register("height")}
         type="number"
         radius="sm"
         size="sm"
@@ -439,6 +627,10 @@ const UserSignupForm = () => {
         placeholder=" "
       />
       <Input
+        variant="faded"
+        isInvalid={!!errors.weight}
+        errorMessage={errors.weight?.message}
+        {...register("weight")}
         type="number"
         radius="sm"
         size="sm"
@@ -452,27 +644,34 @@ const UserSignupForm = () => {
         information being requested.
       </p>
       <Select
-        onChange={(e) => setDisabilityType(e.target.value)}
+        variant="faded"
+        isInvalid={!!errors.disability}
+        errorMessage={errors.disability?.message}
+        {...register("disability")}
         radius="sm"
         size="sm"
         label="Disability Visibility"
-        placeholder="Select your disability visibility"
+        placeholder=" "
         className="text-xs"
       >
-        <SelectItem key={1} value="Visible">
+        <SelectItem key={"Visible"} value="Visible">
           Visible
         </SelectItem>
-        <SelectItem key={2} value="Not Visible">
+        <SelectItem key={"Not Visible"} value="Not Visible">
           Not Visible
         </SelectItem>
       </Select>
 
       <Select
+        variant="faded"
+        isInvalid={!!errors.visibility}
+        errorMessage={errors.visibility?.message}
+        {...register("visibility")}
         isDisabled={disabilityType ? false : true}
         radius="sm"
         size="sm"
         label="Disability Type"
-        placeholder="Select your disability Type"
+        placeholder=" "
         className="text-xs"
       >
         {disabilityType === "Visible"
@@ -489,50 +688,57 @@ const UserSignupForm = () => {
       </Select>
 
       <Select
+        variant="faded"
+        isInvalid={!!errors.made_disabled}
+        errorMessage={errors.made_disabled?.message}
+        {...register("made_disabled")}
         radius="sm"
         size="sm"
         label="What made you become disable?"
         className="text-xs"
         placeholder=" "
       >
-        <SelectItem key={1} value="Inborn">
+        <SelectItem key={"Inborn"} value="Inborn">
           Inborn
         </SelectItem>
-        <SelectItem key={2} value="Sickness">
+        <SelectItem key={"Sickness"} value="Sickness">
           Sickness
         </SelectItem>
-        <SelectItem key={3} value="Accident">
+        <SelectItem key={"Accident"} value="Accident">
           Accident
         </SelectItem>
       </Select>
 
       <Select
+        variant="faded"
+        isInvalid={!!errors.status}
+        errorMessage={errors.status?.message}
+        {...register("status")}
         radius="sm"
         size="sm"
         label="Health Status"
         className="text-xs"
         placeholder=" "
       >
-        <SelectItem key={1} value="Good Condition">
+        <SelectItem key={"Good Condition"} value="Good Condition">
           Good Condition
         </SelectItem>
-        <SelectItem key={2} value="Require Assistance">
+        <SelectItem key={"Require Assistance"} value="Require Assistance">
           Require Assistance
         </SelectItem>
-        <SelectItem key={3} value="Confine to Bed">
+        <SelectItem key={"Confine to Bed"} value="Confine to Bed">
           Confine to Bed
         </SelectItem>
-        <SelectItem key={4} value="Undefined">
+        <SelectItem key={"Undefined"} value="Undefined">
           Undefined
         </SelectItem>
       </Select>
 
       <Select
-        onChange={(e) => {
-          e.target.value === "Specify device used"
-            ? setSpecificDevice(true)
-            : setSpecificDevice(false);
-        }}
+        variant="faded"
+        isInvalid={!!errors.device}
+        errorMessage={errors.device?.message}
+        {...register("device")}
         radius="sm"
         size="sm"
         label="Assistive Devices"
@@ -554,6 +760,8 @@ const UserSignupForm = () => {
       </Select>
 
       <Input
+        variant="faded"
+        {...register("specificDevice")}
         isDisabled={!specificDevice}
         radius="sm"
         size="sm"
@@ -563,11 +771,10 @@ const UserSignupForm = () => {
       />
 
       <Select
-        onChange={(e) => {
-          e.target.value === "Specify Medicine Used"
-            ? setSpecificMedicine(true)
-            : setSpecificMedicine(false);
-        }}
+        variant="faded"
+        isInvalid={!!errors.medicine}
+        errorMessage={errors.medicine?.message}
+        {...register("medicine")}
         radius="sm"
         size="sm"
         label="Current Medicine used"
@@ -589,6 +796,8 @@ const UserSignupForm = () => {
       </Select>
 
       <Input
+        variant="faded"
+        {...register("specificMedicine")}
         isDisabled={!specificMedicine}
         radius="sm"
         size="sm"
@@ -597,6 +806,10 @@ const UserSignupForm = () => {
         placeholder=" "
       />
       <Input
+        variant="faded"
+        isInvalid={!!errors.others}
+        errorMessage={errors.others?.message}
+        {...register("others")}
         radius="sm"
         size="sm"
         label="Other Diseases"
@@ -610,6 +823,10 @@ const UserSignupForm = () => {
         Person to contact incase of emergency
       </h1>
       <Input
+        variant="faded"
+        isInvalid={!!errors.emergencyPerson?.lastName}
+        errorMessage={errors.emergencyPerson?.lastName?.message}
+        {...register("emergencyPerson.lastName")}
         radius="sm"
         size="sm"
         label="Last name"
@@ -617,6 +834,10 @@ const UserSignupForm = () => {
         startContent={<UserIcon className="w-4" />}
       />
       <Input
+        variant="faded"
+        isInvalid={!!errors.emergencyPerson?.firstName}
+        errorMessage={errors.emergencyPerson?.firstName?.message}
+        {...register("emergencyPerson.firstName")}
         radius="sm"
         size="sm"
         label="First name"
@@ -624,13 +845,19 @@ const UserSignupForm = () => {
         startContent={<UserIcon className="w-4" />}
       />
       <Input
+        variant="faded"
+        isInvalid={!!errors.emergencyPerson?.middleName}
+        errorMessage={errors.emergencyPerson?.middleName?.message}
+        {...register("emergencyPerson.middleName")}
         radius="sm"
         size="sm"
-        label="Last name"
+        label="Middle name"
         className="text-xs"
         startContent={<UserIcon className="w-4" />}
       />
       <Input
+        variant="faded"
+        {...register("emergencyPerson.suffix")}
         radius="sm"
         size="sm"
         label="Suffix"
@@ -638,6 +865,10 @@ const UserSignupForm = () => {
         startContent={<UserIcon className="w-4" />}
       />
       <Input
+        variant="faded"
+        isInvalid={!!errors.emergencyPerson?.age}
+        errorMessage={errors.emergencyPerson?.age?.message}
+        {...register("emergencyPerson.age")}
         radius="sm"
         size="sm"
         type="number"
@@ -646,6 +877,10 @@ const UserSignupForm = () => {
         placeholder=" "
       />
       <Select
+        variant="faded"
+        isInvalid={!!errors.emergencyPerson?.gender}
+        errorMessage={errors.emergencyPerson?.gender?.message}
+        {...register("emergencyPerson.gender")}
         radius="sm"
         size="sm"
         label="Gender"
@@ -659,6 +894,10 @@ const UserSignupForm = () => {
         ))}
       </Select>
       <Select
+        variant="faded"
+        isInvalid={!!errors.emergencyPerson?.relationship}
+        errorMessage={errors.emergencyPerson?.relationship?.message}
+        {...register("emergencyPerson.relationship")}
         radius="sm"
         size="sm"
         label="Relationship"
@@ -672,6 +911,10 @@ const UserSignupForm = () => {
         ))}
       </Select>
       <Select
+        variant="faded"
+        isInvalid={!!errors.emergencyPerson?.religion}
+        errorMessage={errors.emergencyPerson?.religion?.message}
+        {...register("emergencyPerson.religion")}
         radius="sm"
         size="sm"
         label="Religion"
@@ -691,6 +934,10 @@ const UserSignupForm = () => {
         Emergency Contact Information
       </h1>
       <Input
+        variant="faded"
+        isInvalid={!!errors.emergencyPerson?.email}
+        errorMessage={errors.emergencyPerson?.email?.message}
+        {...register("emergencyPerson.email")}
         radius="sm"
         size="sm"
         label="Email"
@@ -698,6 +945,10 @@ const UserSignupForm = () => {
         startContent={<EnvelopeIcon className="w-4" />}
       />
       <Input
+        variant="faded"
+        isInvalid={!!errors.emergencyPerson?.phone}
+        errorMessage={errors.emergencyPerson?.phone?.message}
+        {...register("emergencyPerson.phone")}
         type="number"
         radius="sm"
         size="sm"
@@ -706,6 +957,8 @@ const UserSignupForm = () => {
         startContent={<PhoneIcon className="w-4" />}
       />
       <Input
+        variant="faded"
+        {...register("emergencyPerson.landline")}
         radius="sm"
         size="sm"
         label="Landline no."
@@ -723,27 +976,8 @@ const UserSignupForm = () => {
         Home/Permanent Address
       </h1>
       <Input
-        radius="sm"
-        size="sm"
-        label="Province"
-        className="text-xs"
-        placeholder=" "
-      />
-      <Input
-        radius="sm"
-        size="sm"
-        label="City/Municipality"
-        className="text-xs"
-        placeholder=" "
-      />
-      <Input
-        radius="sm"
-        size="sm"
-        label="District"
-        className="text-xs"
-        placeholder=" "
-      />
-      <Input
+        variant="faded"
+        {...register("emergencyPerson.houseno")}
         radius="sm"
         size="sm"
         label="House no.,block,lot,building,etc"
@@ -751,6 +985,10 @@ const UserSignupForm = () => {
         placeholder=" "
       />
       <Input
+        variant="faded"
+        isInvalid={!!errors.emergencyPerson?.street}
+        errorMessage={errors.emergencyPerson?.street?.message}
+        {...register("emergencyPerson.street")}
         radius="sm"
         size="sm"
         label="Street address, village etc."
@@ -758,6 +996,10 @@ const UserSignupForm = () => {
         placeholder=" "
       />
       <Input
+        variant="faded"
+        isInvalid={!!errors.emergencyPerson?.baranggay}
+        errorMessage={errors.emergencyPerson?.baranggay?.message}
+        {...register("emergencyPerson.baranggay")}
         radius="sm"
         size="sm"
         label="Baranggay"
@@ -765,10 +1007,41 @@ const UserSignupForm = () => {
         placeholder=" "
       />
       <Input
+        variant="faded"
+        {...register("emergencyPerson.district")}
+        radius="sm"
+        size="sm"
+        label="District"
+        className="text-xs"
+        placeholder=" "
+      />
+      <Input
+        variant="faded"
+        isInvalid={!!errors.emergencyPerson?.city}
+        errorMessage={errors.emergencyPerson?.city?.message}
+        {...register("emergencyPerson.city")}
+        radius="sm"
+        size="sm"
+        label="City/Municipality"
+        className="text-xs"
+        placeholder=" "
+      />
+      <Input
+        variant="faded"
+        {...register("emergencyPerson.province")}
+        radius="sm"
+        size="sm"
+        label="Province"
+        className="text-xs"
+        placeholder=" "
+      />
+      <Input
+        variant="faded"
+        {...register("emergencyPerson.zipcode")}
         type="number"
         radius="sm"
         size="sm"
-        label="zipconde"
+        label="zip code"
         className="text-xs"
         placeholder=" "
       />
@@ -782,6 +1055,10 @@ const UserSignupForm = () => {
       </i>
       <span className="my-2 w-full col-span-4 flex items-center justify-center gap-2">
         <Input
+          variant="faded"
+          isInvalid={!!errors.password}
+          errorMessage={errors.password?.message}
+          {...register("password")}
           type={showPass ? "text" : "password"}
           radius="sm"
           size="sm"
@@ -803,6 +1080,10 @@ const UserSignupForm = () => {
           }
         />
         <Input
+          variant="faded"
+          isInvalid={!!errors.confirmPassword}
+          errorMessage={errors.confirmPassword?.message}
+          {...register("confirmPassword")}
           type={showPass ? "text" : "password"}
           radius="sm"
           size="sm"
@@ -826,11 +1107,12 @@ const UserSignupForm = () => {
       </span>
 
       <Button
+        isDisabled={isSubmitting}
         type="submit"
         radius="sm"
         className="col-span-4 w-full text-white bg-blue-500"
       >
-        Register
+        {isSubmitting ? "Submitting..." : "Register"}
       </Button>
     </form>
   );

@@ -30,6 +30,7 @@ model User {
   birthdate String
   birthplace String
   gender String
+  religion String
   citizenship String
   civil String
   email String @unique
@@ -42,6 +43,7 @@ model User {
   baranggay String
   city String
   zipcode String
+
   elementary String
   attain String
   highschool String
@@ -50,6 +52,7 @@ model User {
   attain2 String
   college String
   attain3 String
+
   employment String
   occupation String
   yearEmploy String?
@@ -58,15 +61,19 @@ model User {
   yearUnemploy String?
   skill1_1 String?
   skill2_1 String?
+
   blood String
   height String
   weight String
+
   disability String
   visibility String
   made_disabled String
   status String
   device String
+  specificDevice String?
   medicine String
+  specificMedicine String?
   others String
   emergencyPerson EmergencyPerson?
 }
@@ -78,14 +85,14 @@ model EmergencyPerson {
   lastName String
   suffix String?
   age Int
-  birthdate String
-  birthplace String
   gender String
-  citizenship String
-  civil String
+  relationship String
+  religon String
+
   email String @unique
   phone String
   landline String
+
   province String
   district String
   houseno String
