@@ -14,7 +14,7 @@ import { genders } from "../../data/genders";
 import { religions } from "../../data/religion";
 import { civils } from "../../data/civil";
 import { employments } from "../../data/employments";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { bloods } from "../../data/bloods";
 import {
   disabilityTypeNotVisible,
@@ -28,6 +28,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { TUserSignup } from "../../types/user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { userSchema } from "../../lib/userSchema";
+import UserSignupWatch from "../../hooks/UserSignupWatch";
 
 const UserSignupForm = () => {
   const [employmentType, setEmploymentType] = useState("");
@@ -43,53 +44,21 @@ const UserSignupForm = () => {
     formState: { errors, isSubmitting },
   } = useForm<TUserSignup>({ resolver: zodResolver(userSchema) });
 
-  useEffect(() => {
-    if (watch().employment === "Employed") {
-      setEmploymentType("Employed");
-    } else if (watch().employment === "Unemployed") {
-      setEmploymentType("Unemployed");
-    } else if (watch().employment === "Student") {
-      setEmploymentType("Student");
-    } else {
-      setEmploymentType("");
-    }
-  }, [watch().employment]);
+  UserSignupWatch({
+    watch,
+    setDisabilityType,
+    setEmploymentType,
+    setSpecificDevice,
+    setSpecificMedicine,
+  });
 
-  useEffect(() => {
-    if (watch().disability === "Visible") {
-      setDisabilityType("Visible");
-    } else if (watch().disability === "Not Visible") {
-      setDisabilityType("Not Visible");
-    } else {
-      setDisabilityType("");
-    }
-  }, [watch().disability]);
-
-  useEffect(() => {
-    if (watch().device === "Specify device used") {
-      setSpecificDevice(true);
-    } else {
-      setSpecificDevice(false);
-    }
-  }, [watch().device]);
-
-  useEffect(() => {
-    if (watch().medicine === "Specify Medicine Used") {
-      setSpecificMedicine(true);
-    } else {
-      setSpecificMedicine(false);
-    }
-  }, [watch().medicine]);
-
-  const onSubmit: SubmitHandler<TUserSignup> = (data) => {
+  const onSubmit: SubmitHandler<TUserSignup> = async (data) => {
     try {
       console.log(data);
-      alert("Submitted");
     } catch (error) {
       console.log(error);
     }
   };
-  console.log(errors);
 
   return (
     <form

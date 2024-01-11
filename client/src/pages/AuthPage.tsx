@@ -3,8 +3,13 @@ import { Link } from "react-router-dom";
 
 const AuthPage = () => {
   return (
-    <div className="bg-[url(./main_bg.jpg)] bg-center bg-cover w-3/4 h-3/4 rounded-xl shadow-xl flex flex-col justify-between p-16 ">
-      <span className="flex flex-col gap-2">
+    <div className="relative w-3/4 h-3/4 rounded-xl shadow-xl flex flex-col justify-between p-16 ">
+      <img
+        src="/main_bg.jpg"
+        alt="mainbg"
+        className="w-full h-full absolute top-0 left-0 rounded-xl "
+      />
+      <span className="flex flex-col gap-2 z-10">
         <h1 className="text-6xl ">Profilling System</h1>
         <i className="text-xl">for Person w/ Disabilities</i>
       </span>

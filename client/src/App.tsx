@@ -6,11 +6,15 @@ import AuthLayout from "./AuthLayout";
 import AuthPage from "./pages/AuthPage";
 import AdminLogin from "./pages/AdminLogin";
 import AdminSignup from "./pages/AdminSignup";
+import AdminPersistsLogin from "./lib/admin/AdminPersistsLogin";
 
 const App = () => {
   return (
     <Routes>
       <Route path="/*" element={<Layout />}></Route>
+      <Route path="/*" element={<Layout />}>
+        <Route element={<AdminPersistsLogin></AdminPersistsLogin>}></Route>
+      </Route>
 
       <Route path="auth" element={<AuthLayout />}>
         <Route index element={<AuthPage />} />

@@ -11,17 +11,29 @@ import { Link } from "react-router-dom";
 import { TAdminLogin } from "../../types/admin";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { adminLoginSchema } from "../../lib/adminSchema";
+import axios from "../../api/axios";
 
 const AdminLoginForm = () => {
   const [showPass, setShowPass] = useState(false);
   const {
+    reset,
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<TAdminLogin>({ resolver: zodResolver(adminLoginSchema) });
 
-  const onSubmit: SubmitHandler<TAdminLogin> = (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<TAdminLogin> = async (data) => {
+    try {
+      const res = await axios.post("/admin/login", data, {
+        withCredentials: true,
+      });
+      console.log(res.data);
+      alert(res.data.message);
+    } catch (error) {
+      console.log(data);
+    } finally {
+      reset();
+    }
   };
 
   return (

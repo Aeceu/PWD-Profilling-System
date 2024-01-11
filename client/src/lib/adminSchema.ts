@@ -24,7 +24,7 @@ export const adminSchema = z.object({
     .string()
     .min(6, "Password must be atleast 6 characters")
     .max(50, "Password must be less than 50 characters"),
-  position: z.enum(["Administrative", "Employee"], {
+  role: z.enum(["Administrative", "Employee"], {
     invalid_type_error: "Please select your position!",
   }),
 });

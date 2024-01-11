@@ -6,19 +6,31 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Checkbox, Input, Select, SelectItem } from "@nextui-org/react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { adminSchema } from "../../lib/adminSchema";
 import { TAdminSignup } from "../../types/admin";
+import axios from "../../api/axios";
 
 const AdminSignupForm = () => {
+  const navigate = useNavigate();
   const {
+    reset,
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<TAdminSignup>({ resolver: zodResolver(adminSchema) });
 
-  const onSubmit: SubmitHandler<TAdminSignup> = (data: TAdminSignup) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<TAdminSignup> = async (data: TAdminSignup) => {
+    try {
+      const res = await axios.post("/admin/signup", data);
+      console.log(res.data);
+      alert(res.data);
+      navigate("/auth/admin/login");
+    } catch (error) {
+      console.log(error);
+    } finally {
+      reset();
+    }
   };
 
   return (
@@ -95,9 +107,9 @@ const AdminSignupForm = () => {
       />
       <Select
         variant="faded"
-        {...register("position")}
-        isInvalid={!!errors.position}
-        errorMessage={errors.position?.message}
+        {...register("role")}
+        isInvalid={!!errors.role}
+        errorMessage={errors.role?.message}
         label="Select Position"
         placeholder=" "
         className="col-span-2"
