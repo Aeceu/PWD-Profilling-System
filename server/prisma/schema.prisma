@@ -33,16 +33,18 @@ model User {
   religion    String
   citizenship String
   civil       String
+
   email       String   @unique
   phone       String
-  landline    String
-  province    String
-  district    String
-  houseno     String
+  landline    String?
+  
+  houseno     String?
   street      String
   baranggay   String
+  district    String?
   city        String
-  zipcode     String
+  province    String?
+  zipcode     String?
 
   elementary String
   attain     String
@@ -74,8 +76,12 @@ model User {
   specificDevice   String?
   medicine         String
   specificMedicine String?
-  others           String
+  others           String?
   emergencyPerson  EmergencyPerson?
+
+  password     String?
+  refreshToken String? @db.Text()
+  role         String
 }
 
 model EmergencyPerson {
@@ -87,7 +93,7 @@ model EmergencyPerson {
   age          Int
   gender       String
   relationship String
-  religon      String
+  religion      String
 
   email    String @unique
   phone    String

@@ -62,13 +62,13 @@ export const userSchema = z
     attain3: z.string().min(1, "Required"),
 
     employment: z.string().min(1, "Required"),
-    occupation: z.string().nullable(),
-    yearEmploy: z.string().nullable(),
-    skill1: z.string().nullable(),
-    skill2: z.string().nullable(),
-    yearUnemploy: z.string().nullable(),
-    skill1_1: z.string().nullable(),
-    skill2_1: z.string().nullable(),
+    occupation: z.string().optional(),
+    yearEmploy: z.string().optional(),
+    skill1: z.string().optional(),
+    skill2: z.string().optional(),
+    yearUnemploy: z.string().optional(),
+    skill1_1: z.string().optional(),
+    skill2_1: z.string().optional(),
 
     blood: z.string().min(1, "Required"),
     height: z.string().min(1, "Required"),
@@ -82,7 +82,7 @@ export const userSchema = z
     specificDevice: z.string().optional(),
     medicine: z.string().min(1, "Required"),
     specificMedicine: z.string().optional(),
-    others: z.string().nullable(),
+    others: z.string().optional(),
 
     emergencyPerson: z
       .object({

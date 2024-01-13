@@ -23,12 +23,13 @@ import {
 import { assistiveDevices } from "../../data/assistiveDevices";
 import { medications } from "../../data/medications";
 import { relationships } from "../../data/relationships";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { TUserSignup } from "../../types/user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { userSchema } from "../../lib/userSchema";
 import UserSignupWatch from "../../hooks/UserSignupWatch";
+import axios from "../../api/axios";
 
 const UserSignupForm = () => {
   const [employmentType, setEmploymentType] = useState("");
@@ -43,7 +44,7 @@ const UserSignupForm = () => {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<TUserSignup>({ resolver: zodResolver(userSchema) });
-
+  const navigate = useNavigate();
   UserSignupWatch({
     watch,
     setDisabilityType,
@@ -54,7 +55,12 @@ const UserSignupForm = () => {
 
   const onSubmit: SubmitHandler<TUserSignup> = async (data) => {
     try {
-      console.log(data);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { confirmPassword, ...user } = data;
+      const res = await axios.post("/user/signup", user);
+      console.log(res.data);
+      alert(res.data);
+      navigate("/auth/user/login");
     } catch (error) {
       console.log(error);
     }

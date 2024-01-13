@@ -7,11 +7,20 @@ import AuthPage from "./pages/AuthPage";
 import AdminLogin from "./pages/AdminLogin";
 import AdminSignup from "./pages/AdminSignup";
 import AdminPersistsLogin from "./lib/admin/AdminPersistsLogin";
+import UserHome from "./pages/user/userhome";
+import Service from "./pages/user/Service";
+import About from "./pages/user/About";
+import Contact from "./pages/user/Contact";
 
 const App = () => {
   return (
     <Routes>
-      <Route path="/*" element={<Layout />}></Route>
+      <Route path="/*" element={<Layout />}>
+        <Route index element={<UserHome />} />
+        <Route path="about" element={<About />} />
+        <Route path="service" element={<Service />} />
+        <Route path="contact" element={<Contact />} />
+      </Route>
       <Route path="/*" element={<Layout />}>
         <Route element={<AdminPersistsLogin></AdminPersistsLogin>}></Route>
       </Route>

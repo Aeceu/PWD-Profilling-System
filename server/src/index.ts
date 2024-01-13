@@ -1,8 +1,9 @@
 import cors from "cors";
 import dotenv from "dotenv";
-import express from "express";
+import express, { Response } from "express";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
+import userRouter from "./routers/userRouters";
 import adminRouter from "./routers/adminRouters";
 
 dotenv.config();
@@ -19,6 +20,7 @@ app.use(
 );
 
 app.use("/api/v1", adminRouter);
+app.use("/api/v1", userRouter);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
