@@ -13,9 +13,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { userLoginSchema } from "../../lib/userSchema";
 import { TUserLogin } from "../../types/user";
 import axios from "../../api/axios";
+import useUserContext from "@/hooks/user/useUserContext";
 
 const UserLoginForm = () => {
   const [showPass, setShowPass] = useState(false);
+  const { setToken, setUser } = useUserContext();
   const navigate = useNavigate();
   const {
     register,
@@ -25,7 +27,11 @@ const UserLoginForm = () => {
 
   const onSubmit: SubmitHandler<TUserLogin> = async (data) => {
     try {
-      const res = await axios.post("/user/login", data);
+      const res = await axios.post("/user/login", data, {
+        withCredentials: true,
+      });
+      setToken(res.data.accessToken);
+      setUser(res.data.user);
       alert(res.data.message);
       console.log(res.data);
       navigate("/");

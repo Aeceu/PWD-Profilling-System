@@ -1,6 +1,6 @@
 const ShapeDivider = () => {
   return (
-    <div className="custom-shape-divider-bottom-1705167870 z-50">
+    <div className="custom-shape-divider-top-1705248995 z-50">
       <svg
         data-name="Layer 1"
         xmlns="http://www.w3.org/2000/svg"

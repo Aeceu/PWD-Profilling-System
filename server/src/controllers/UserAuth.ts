@@ -130,7 +130,7 @@ export const logout = async (req: Request, res: Response) => {
   }
 
   //* Delete refreshToken in db
-  await prisma.admin.update({
+  await prisma.user.update({
     where: {
       id: foundUser.id,
     },

@@ -7,7 +7,7 @@ import {
 import { Button, Input } from "@nextui-org/react";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { TAdminLogin } from "../../types/admin";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { adminLoginSchema } from "../../lib/adminSchema";
@@ -15,6 +15,7 @@ import axios from "../../api/axios";
 
 const AdminLoginForm = () => {
   const [showPass, setShowPass] = useState(false);
+  const navigate = useNavigate();
   const {
     reset,
     register,
@@ -29,6 +30,7 @@ const AdminLoginForm = () => {
       });
       console.log(res.data);
       alert(res.data.message);
+      navigate("/admin");
     } catch (error) {
       console.log(data);
     } finally {

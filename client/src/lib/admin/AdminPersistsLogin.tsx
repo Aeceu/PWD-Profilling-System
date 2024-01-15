@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import useRefreshToken from "../../hooks/useRefreshToken";
-import useAdminContext from "../../hooks/useAdminContext";
+import useRefreshToken from "../../hooks/admin/useRefreshToken";
+import useAdminContext from "../../hooks/admin/useAdminContext";
 import { Outlet, useNavigate } from "react-router-dom";
 
 const AdminPersistsLogin = () => {

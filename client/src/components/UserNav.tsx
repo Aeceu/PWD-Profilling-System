@@ -1,4 +1,5 @@
 import { EnvelopeIcon, PhoneIcon } from "@heroicons/react/20/solid";
+import NavButtons from "./NavButtons";
 
 const UserNav = () => {
   return (
@@ -11,6 +12,7 @@ const UserNav = () => {
         <EnvelopeIcon className="w-4 text-orange-500" />
         <p>Email : The_Empowering_PWDs@gmail.com</p>
       </span>
+      <NavButtons />
     </nav>
   );
 };

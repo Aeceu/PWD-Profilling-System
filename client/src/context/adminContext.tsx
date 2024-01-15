@@ -3,27 +3,24 @@ import { TAdmin } from "../types/admin";
 
 type AdminContextType = {
   admin: TAdmin | null;
-  updateAdmin: (admin: TAdmin | null) => void;
+  setAdmin: (admin: TAdmin | null) => void;
   token: string | null;
-  updateToken: (token: string | null) => void;
+  setToken: (token: string | null) => void;
 };
 
-export const AdminContext = createContext<AdminContextType | null>(null);
+export const AdminContext = createContext<AdminContextType>({
+  admin: null,
+  token: null,
+  setAdmin: () => {},
+  setToken: () => {},
+});
 
 const AdminProvider = ({ children }: { children: React.ReactNode }) => {
   const [admin, setAdmin] = useState<TAdmin | null>(null);
   const [token, setToken] = useState<string | null>(null);
 
-  const updateAdmin = (admin: TAdmin | null) => {
-    setAdmin(admin);
-  };
-
-  const updateToken = (token: string | null) => {
-    setToken(token);
-  };
-
   return (
-    <AdminContext.Provider value={{ admin, updateAdmin, updateToken, token }}>
+    <AdminContext.Provider value={{ admin, setAdmin, setToken, token }}>
       {children}
     </AdminContext.Provider>
   );

@@ -7,22 +7,48 @@ import AuthPage from "./pages/AuthPage";
 import AdminLogin from "./pages/AdminLogin";
 import AdminSignup from "./pages/AdminSignup";
 import AdminPersistsLogin from "./lib/admin/AdminPersistsLogin";
-import UserHome from "./pages/user/userhome";
+import UserHome from "./pages/user/Userhome";
 import Service from "./pages/user/Service";
 import About from "./pages/user/About";
 import Contact from "./pages/user/Contact";
+import UserPersistsLogin from "./lib/user/UserPersistsLogin";
+import UserProtectedRoute from "./lib/user/UserProtectedRoute";
+import AdminProtectedRoute from "./lib/admin/AdminProtectedRoute";
+import Profile from "./pages/user/Profile";
+import Dashboard from "./pages/admin/Dashboard";
 
 const App = () => {
   return (
     <Routes>
-      <Route path="/*" element={<Layout />}>
-        <Route index element={<UserHome />} />
-        <Route path="about" element={<About />} />
-        <Route path="service" element={<Service />} />
-        <Route path="contact" element={<Contact />} />
+      {/* Protected User Page */}
+      <Route element={<UserPersistsLogin />}>
+        <Route element={<UserProtectedRoute allowedRoles={["User"]} />}>
+          <Route path="/profile/:id" element={<Layout />}>
+            <Route index element={<Profile />} />
+          </Route>
+        </Route>
       </Route>
-      <Route path="/*" element={<Layout />}>
-        <Route element={<AdminPersistsLogin></AdminPersistsLogin>}></Route>
+
+      {/* Protected Admin Page */}
+      <Route element={<AdminPersistsLogin />}>
+        <Route
+          element={
+            <AdminProtectedRoute
+              allowedRoles={["Administrative", "Employee"]}
+            />
+          }
+        >
+          <Route path="/admin/dashboard" element={<Layout />}>
+            <Route index element={<Dashboard />} />
+          </Route>
+        </Route>
+      </Route>
+
+      <Route element={<Layout />}>
+        <Route path="/" element={<UserHome />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/service" element={<Service />} />
+        <Route path="/contact" element={<Contact />} />
       </Route>
 
       <Route path="auth" element={<AuthLayout />}>
